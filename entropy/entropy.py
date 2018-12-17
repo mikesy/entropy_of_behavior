@@ -43,6 +43,8 @@ def calc_alpha(u_errors, search_tol=1):
 def calc_entropy(u_errors, alpha):
     # can accept a list of lists since data is segmented previously or a single list
     bin_ranges = [-float("inf"), -5*alpha, -2.5*alpha, -alpha, -.5*alpha, .5*alpha, alpha, 2.5*alpha, 5*alpha, float("inf")]
+    bin_ranges = [-float("inf"), -5*alpha, -3.5*alpha, -2*alpha, -alpha, 
+                  0, alpha, 2*alpha, 3.5*alpha, 5*alpha, float("inf")]
     segment_entropies = []
     for segment_errors in u_errors:
         entropy = 0
@@ -55,3 +57,46 @@ def calc_entropy(u_errors, alpha):
             entropy += p_bin*np.log(p_bin)/np.log(len(bin_ranges)-1)     #uses log rule: log_x (y) = log_a (y) / log_a(x)
         segment_entropies += [-entropy]
     return segment_entropies
+
+
+def calc_entropy_Nd(u_errors, alphas):
+    # can accept a list of lists since data is segmented previously or a single list
+    bin_ranges = []
+    dim = len(alphas)
+    for alpha in alphas:
+        bin_ranges.append([-float("inf"), -5*alpha, -3.5*alpha, -2*alpha, -alpha,
+                           0, alpha, 2*alpha, 3.5*alpha, 5*alpha, float("inf")])
+
+    all_bin_combos = list(get_nbin_lims(0, len(bin_ranges[0])-1, dim))
+    num_bins = len(all_bin_combos)
+    segment_entropies = []
+    for segment_errors in u_errors:
+        num_points = len(segment_errors[0,:])
+        entropy = 0
+        for bin_combo in all_bin_combos:
+            point_count = 0
+            for u_i in range(num_points):
+                in_bin = True
+                for dim_i in range(dim):
+                    u = segment_errors[dim_i,u_i]
+                    if u <= bin_ranges[dim_i][bin_combo[dim_i]] or u > bin_ranges[dim_i][bin_combo[dim_i]+1]:
+                        in_bin = False
+                        break
+                if in_bin:
+                    point_count += 1
+                
+            p_bin = float(point_count) /float(num_points)  # probability of bin_
+            if p_bin < 1e-10:
+                p_bin = 1e-10
+
+            entropy += p_bin*np.log(p_bin)/np.log(num_bins) # uses log rule: log_x (y) = log_a (y) / log_a(x)
+        segment_entropies += [-entropy]
+    return segment_entropies
+
+def get_nbin_lims(start,stop,dims):
+    if not dims:
+        yield()
+        return
+    for outer in get_nbin_lims(start,stop,dims-1):
+        for inner in range(start,stop):
+            yield outer + (inner,)
