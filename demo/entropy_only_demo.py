@@ -30,7 +30,7 @@ def normal_distribution_entropy_comparison():
             alpha = entropy.calc_alpha(x)
         entropy_val = entropy.calc_entropy([x], alpha)
         plt.title("H = % 6.4f" % entropy_val[0])
-        n,bins,patches = plt.hist(x,50)
+        n,bins,patches = plt.hist(x,int(500*sigma))
 
         bin_borders = [-5*alpha, -3.5*alpha, -2*alpha, -alpha, 0, alpha, 2*alpha, 3.5*alpha, 5*alpha]
         for border in bin_borders:
