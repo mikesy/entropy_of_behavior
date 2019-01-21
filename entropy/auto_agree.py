@@ -30,7 +30,7 @@ def get_command_errors_1d(ucmd, acmd,command_row):
     return u_err_all
 
 
-def get_command_errors_2d(ucmd, acmd, command_rows):
+def get_command_errors_Nd(ucmd, acmd):
     """
     inputs:
         ucmd- user command
@@ -45,7 +45,15 @@ def get_command_errors_2d(ucmd, acmd, command_rows):
                    dimensions same as ucmd and acmd
 
     """
-
+    N = np.shape(ucmd)[0]
+    u_err_all = []
+    for ucmd_segment, acmd_segment in zip(ucmd, acmd):
+        u_err = []
+        for ucmd_t, acmd_t in zip (ucmd_segment, acmd_segment):
+            u_err_t = [u_i - a_i for u_i, a_i in zip(ucmd_t, acmd_t)]
+            u_err.append(np.linalg.norm(u_err_t))
+        u_err_all.append(u_err)
+    return u_err_all
     # ensure inputs are of equal size
 
     # process

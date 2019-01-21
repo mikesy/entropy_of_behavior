@@ -81,7 +81,7 @@ def calculate_fft_frequency_spectrum(u,
     n = np.shape(u)[0]
     spectrum = np.fft.fft(u, axis=0)
     spectrum = spectrum[0:int(n/2),:]
-    spectrum = np.linalg.norm(spectrum, axis=1)
+    spectrum = np.linalg.norm(spectrum, axis=1)/n
     if t_total:
         dt = t_total/np.shape(u)[0]
         freq = np.fft.fftfreq(n, d=dt)
