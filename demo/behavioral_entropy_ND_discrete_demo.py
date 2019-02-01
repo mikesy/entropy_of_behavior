@@ -44,23 +44,23 @@ class CompareBEND:
         self.figure_i += 1
         # ax = fig.add_subplot(111)    # The big subplot
 
-        norm = colors.Normalize(vmin=0, vmax=33)
+        norm = colors.Normalize(vmin=0, vmax=1)
         plt.subplot(141)
         cm = np.array([[33, 0, 0], [0, 33, 0], [0, 0, 33]])
-        self.plot_confusion_matrix_for_subplot(cm,norm, show_y_ticks=True)
+        self.plot_confusion_matrix_for_subplot(cm,norm, show_y_ticks=True,normalize=True)
         plt.ylabel('Predicted Label')
 
         plt.subplot(142)
         cm = np.array([[31, 1, 1], [1, 31, 1], [1, 1, 31]])
-        self.plot_confusion_matrix_for_subplot(cm,norm)
+        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=True)
 
         plt.subplot(143)
         cm = np.array([[11, 11, 11], [11, 11, 11], [11, 11, 11]])
-        self.plot_confusion_matrix_for_subplot(cm,norm)
+        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=True)
 
         plt.subplot(144)
         cm = np.array([[3, 15, 15], [15, 3, 15], [15, 15, 3]])
-        self.plot_confusion_matrix_for_subplot(cm,norm)
+        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=True)
 
         # ax.set_xlabel('True Label')
         fig.text(0.5, 0.3, 'True label', ha='center', va='center')
@@ -92,7 +92,7 @@ class CompareBEND:
         plt.title(title)
 
         tick_marks = np.arange(len(self.classes))
-        plt.xticks(tick_marks, self.classes, rotation=45)
+        plt.xticks(tick_marks, self.classes)#, rotation=45)
         if show_y_ticks:
             plt.yticks(tick_marks, self.classes)
         else:
