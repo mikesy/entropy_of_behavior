@@ -43,30 +43,40 @@ class CompareBEND:
         fig = plt.figure(self.figure_i)
         self.figure_i += 1
         # ax = fig.add_subplot(111)    # The big subplot
-
-        norm = colors.Normalize(vmin=0, vmax=1)
-        plt.subplot(141)
+        normalize = False
+        if normalize:
+            vmax = 1
+        else:
+            vmax = 99
+        norm = colors.Normalize(vmin=0, vmax=vmax)
+        plt.subplot(151)
         cm = np.array([[33, 0, 0], [0, 33, 0], [0, 0, 33]])
-        self.plot_confusion_matrix_for_subplot(cm,norm, show_y_ticks=True,normalize=True)
+        self.plot_confusion_matrix_for_subplot(cm,norm, show_y_ticks=True,normalize=normalize)
         plt.ylabel('Predicted Label')
-
-        plt.subplot(142)
+        
+        plt.subplot(152)
         cm = np.array([[31, 1, 1], [1, 31, 1], [1, 1, 31]])
-        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=True)
+        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
 
-        plt.subplot(143)
+        plt.subplot(153)
         cm = np.array([[11, 11, 11], [11, 11, 11], [11, 11, 11]])
-        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=True)
+        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
 
-        plt.subplot(144)
-        cm = np.array([[3, 15, 15], [15, 3, 15], [15, 15, 3]])
-        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=True)
+        plt.subplot(154)
+        cm = np.array([[3, 15, 15], [1, 3, 1], [1, 1, 3]])
+        self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
+
+        plt.subplot(155)
+        cm = np.array([[80, 0, 0], [1, 8, 1], [2, 3, 5]])
+        self.plot_confusion_matrix_for_subplot(cm, norm, normalize=normalize)
 
         # ax.set_xlabel('True Label')
         fig.text(0.5, 0.3, 'True label', ha='center', va='center')
         if self.save_plots:
             plt.savefig('../plots/comparison_of_4_discrete_entropy_types.eps',
                         format='eps', dpi=1000, bbox_inches='tight')
+            plt.savefig('../plots/comparison_of_4_discrete_entropy_types.png',
+                        format='png', dpi=1000, bbox_inches='tight')
         # plt.colorbar(orientation='horizontal')
         
                    # plt.ylabel('True label')
