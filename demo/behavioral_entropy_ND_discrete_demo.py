@@ -52,7 +52,7 @@ class CompareBEND:
         plt.subplot(151)
         cm = np.array([[33, 0, 0], [0, 33, 0], [0, 0, 33]])
         self.plot_confusion_matrix_for_subplot(cm,norm, show_y_ticks=True,normalize=normalize)
-        plt.ylabel('Predicted Label')
+        plt.ylabel('True Label')
         
         plt.subplot(152)
         cm = np.array([[31, 1, 1], [1, 31, 1], [1, 1, 31]])
@@ -63,19 +63,19 @@ class CompareBEND:
         self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
 
         plt.subplot(154)
-        cm = np.array([[3, 15, 15], [1, 3, 1], [1, 1, 3]])
+        cm = np.array([[3, 15, 15], [15, 3, 15], [15, 15, 3]])
         self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
 
         plt.subplot(155)
-        cm = np.array([[80, 0, 0], [1, 8, 1], [2, 3, 5]])
+        cm = np.array([[80, 0, 0], [1, 8, 1], [2, 2, 5]])
         self.plot_confusion_matrix_for_subplot(cm, norm, normalize=normalize)
 
         # ax.set_xlabel('True Label')
-        fig.text(0.5, 0.3, 'True label', ha='center', va='center')
+        fig.text(0.5, 0.3, 'Predicted label', ha='center', va='center')
         if self.save_plots:
-            plt.savefig('../plots/comparison_of_4_discrete_entropy_types.eps',
+            plt.savefig('../plots/comparison_of_5_discrete_entropy_types.eps',
                         format='eps', dpi=1000, bbox_inches='tight')
-            plt.savefig('../plots/comparison_of_4_discrete_entropy_types.png',
+            plt.savefig('../plots/comparison_of_5_discrete_entropy_types.png',
                         format='png', dpi=1000, bbox_inches='tight')
         # plt.colorbar(orientation='horizontal')
         
@@ -85,7 +85,7 @@ class CompareBEND:
     def plot_confusion_matrix_for_subplot(self, cm, norm,
                               show_y_ticks=False,
                               normalize=False,
-                              cmap=plt.cm.Blues):
+                              cmap=plt.cm.Greens):
         """
         This function prints and plots the confusion matrix.
         Normalization can be applied by setting `normalize=True`.
@@ -109,7 +109,7 @@ class CompareBEND:
             plt.yticks(tick_marks, self.classes,visible=False)
 
         fmt = '.2f' if normalize else 'd'
-        thresh = cm.max() / 2.
+        thresh = cm.max() / 1.
         for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
             plt.text(j, i, format(cm[i, j], fmt),
                     horizontalalignment="center",
