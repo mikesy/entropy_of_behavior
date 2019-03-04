@@ -53,25 +53,30 @@ class CompareBEND:
         cm = np.array([[33, 0, 0], [0, 33, 0], [0, 0, 33]])
         self.plot_confusion_matrix_for_subplot(cm,norm, show_y_ticks=True,normalize=normalize)
         plt.ylabel('True Label')
+        plt.xlabel('(a)')
         
         plt.subplot(152)
         cm = np.array([[31, 1, 1], [1, 31, 1], [1, 1, 31]])
         self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
+        plt.xlabel('(b)')
 
         plt.subplot(153)
         cm = np.array([[11, 11, 11], [11, 11, 11], [11, 11, 11]])
         self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
+        plt.xlabel('(c)')
 
         plt.subplot(154)
         cm = np.array([[3, 15, 15], [15, 3, 15], [15, 15, 3]])
         self.plot_confusion_matrix_for_subplot(cm,norm,normalize=normalize)
+        plt.xlabel('(d)')
 
         plt.subplot(155)
         cm = np.array([[80, 0, 0], [1, 8, 1], [2, 2, 5]])
         self.plot_confusion_matrix_for_subplot(cm, norm, normalize=normalize)
+        plt.xlabel('(e)')
 
         # ax.set_xlabel('True Label')
-        fig.text(0.5, 0.3, 'Predicted label', ha='center', va='center')
+        fig.text(0.525, 0.28, 'Predicted label', ha='center', va='center')
         if self.save_plots:
             plt.savefig('../plots/comparison_of_5_discrete_entropy_types.eps',
                         format='eps', dpi=1000, bbox_inches='tight')
