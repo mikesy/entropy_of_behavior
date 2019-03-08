@@ -18,21 +18,6 @@ class CompareBEND:
         self.figure_i = 0
         self.save_plots = save_plots
         self.classes = ["1", "2", "3"]
-        # cm = np.array([[33, 0, 0], [0, 33, 0], [0, 0, 33]])
-        # self.plot_entropy_confusion_matrix(cm, "Identity", "identity")
-
-        # cm = np.array([[31, 1, 1], [1, 31, 1], [1, 1, 31]])
-        # self.plot_entropy_confusion_matrix(cm, "Slight Skew", "slight_skew")
-
-        # cm = np.array([[11, 11, 11], [11, 11, 11], [11, 11, 11]])
-        # self.plot_entropy_confusion_matrix(cm, "Even Spread", "even_spread")
-
-        # cm = np.array([[3, 15, 15], [15, 3, 15], [15, 15, 3]])
-        # self.plot_entropy_confusion_matrix(cm, "Even Inaccurate", "evenly_inaccurate")
-
-        # cm = np.array([[1, 5, 5], [5, 1, 5], [5, 5, 1]])
-        # self.plot_entropy_confusion_matrix(
-        #     cm, "Even Inaccurate", "evenly_inaccurate_less_samp")
 
         self.create_single_plot_multiple_examples()
 
