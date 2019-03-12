@@ -16,19 +16,19 @@ class EntropyOfBehaviorTestCase(unittest.TestCase):
         entropyObject.update_command_list([0])
         entropyObject.update_command_list([1])
         entropyObject.update_command_list([2])
-        self.assertEqual(entropyObject.u, [[0],[1],[2]])
+        self.assertEqual(entropyObject.u_for_prediction, [[0],[1],[2]])
 
         entropyObject.update_command_list([3])
-        self.assertEqual(entropyObject.u, [[1], [2], [3]])
+        self.assertEqual(entropyObject.u_for_prediction, [[1], [2], [3]])
 
         entropyObject = eob.EntropyOfBehavior(f, 3, 3, 2)
         entropyObject.update_command_list([0, 0])
         entropyObject.update_command_list([1, 1])
         entropyObject.update_command_list([2, 2])
-        self.assertEqual(entropyObject.u, [[0, 0], [1, 1], [2, 2]])
+        self.assertEqual(entropyObject.u_for_prediction, [[0, 0], [1, 1], [2, 2]])
 
         entropyObject.update_command_list([3, 3])
-        self.assertEqual(entropyObject.u, [[1, 1], [2, 2], [3, 3]])
+        self.assertEqual(entropyObject.u_for_prediction, [[1, 1], [2, 2], [3, 3]])
 
     def test_check_command(self):
         def f(x):
