@@ -64,3 +64,11 @@ class ContinousEntropyOfBehavior(EntropyOfBehavior):
         
         if N >= 1:
             raise ValueError("continuous multiple dimensions not implemented yet")
+
+    def update(self, u_t):
+        self.predict_u()
+        self.update_command_list(u_t)
+        self.estimate_entropy()
+
+    def estimate_entropy(self):
+        

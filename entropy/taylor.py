@@ -26,3 +26,12 @@ def get_command_errors_1d(ucmd):
                 u_errors += [pred_error]
         all_seg_errors.append(u_errors)
     return all_seg_errors
+
+def predict_u(u, t):
+    """
+    inputs:
+        u- array or list 4x1 [u(t_), ]
+
+    """
+    taylor_pred = u[2] + (u[2]-u[1]) + 0.5*((u[2]-u[1]) - (u[1] - u[0]))
+
