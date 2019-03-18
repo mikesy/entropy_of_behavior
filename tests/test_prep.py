@@ -2,13 +2,14 @@
 
 
 import numpy as np
-import unittest
+import pytest
 
 import sys
 sys.path.append('../')
 from prep import prep
 
-class MatConverterTestCase(unittest.TestCase):
+
+class TestMatConverter(object):
     """tests for entropy functions"""
 
     def test_segment_array_using_marker(self):
@@ -32,35 +33,35 @@ class MatConverterTestCase(unittest.TestCase):
         segmented_time, segmented_data = prep.segment_array_using_marker(
             data, time, marker_times, lag)
 
-        self.assertEqual(segmented_data.tolist(), [data[2:5]])
-        self.assertEqual(segmented_time.tolist(), [time[2:5]])
+        assert segmented_data.tolist() == [data[2:5]]
+        assert segmented_time.tolist()== [time[2:5]]
 
         marker_times = [0.42, 0.89]
 
         segmented_time, segmented_data = prep.segment_array_using_marker(
             data, time, marker_times, lag)
 
-        self.assertEqual(segmented_data.tolist(), [data[2:5], data[6:9]])
-        self.assertEqual(segmented_time.tolist(), [time[2:5], time[6:9]])
+        assert segmented_data.tolist() == [data[2:5], data[6:9]]
+        assert segmented_time.tolist() == [time[2:5], time[6:9]]
 
     def test_get_marker_pos(self):
         times = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5]
         marker_time = 0.21
         marker_pos = prep.get_marker_pos(times, marker_time)
-        self.assertEqual(marker_pos, 2)
+        assert marker_pos == 2
 
         marker_time = 0.199
         marker_pos = prep.get_marker_pos(times, marker_time)
-        self.assertEqual(marker_pos, 1)
+        assert marker_pos == 1
 
         marker_time = 0.001
         marker_pos = prep.get_marker_pos(times, marker_time)
-        self.assertEqual(marker_pos, 0)
+        assert marker_pos == 0
 
         marker_time = 0.505
         marker_pos = prep.get_marker_pos(times, marker_time)
-        self.assertEqual(marker_pos, 6)
+        assert marker_pos == 6
 
-        with self.assertRaisesRegex(ValueError, "no feasible time bc marker_time is before time starts"):
+        with pytest.raises(ValueError): #, "no feasible time bc marker_time is before time starts"):
             marker_time = -0.005
             marker_pos = prep.get_marker_pos(times, marker_time)

@@ -56,8 +56,6 @@ class DiscreteEntropyOfBehavior(EntropyOfBehavior):
         discrete.calc_entropy_using_confusion_matrix(self.u_true, self.u_for_prediction, labels = self.labels)
         print("n")
 
-
-
 class ContinousEntropyOfBehavior(EntropyOfBehavior):
     def __init__(self, predictor, prediction_window, entropy_estimation_window, N):
         EntropyOfBehavior.__init__(self, predictor, prediction_window, entropy_estimation_window, N)
@@ -71,4 +69,4 @@ class ContinousEntropyOfBehavior(EntropyOfBehavior):
         self.estimate_entropy()
 
     def estimate_entropy(self):
-        
+        return 0
