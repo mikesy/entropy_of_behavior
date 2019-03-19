@@ -13,47 +13,55 @@ class EntropyOfBehavior:
         self.N = N
 
         # self.u_for_prediction = []
-        self.u_true = np.array([[]])
-        self.u_predicted = np.array([])
-        self.entropy = 0
+        self.u_true = []
+        self.u_predicted = []
+        self.entropy = None
 
     def update_command_list(self, u):
-
+        """
+        inputs:
+            u- 1d np array with N elements (use flatten() if more than 3d array)
+        """
         self.check_command(u)
-
-
-        if u_true:
-            if len(self.u_true) < self.w_p or len(self.u_true) < self.w_e:
-                self.u_true = append(u)
+        u = np.array([u])   # necessary to append
+        num_samples_collected = np.shape(self.u_true)[0]
+        if num_samples_collected >=1:
+            if num_samples_collected < self.w_p or num_samples_collected < self.w_e:
+                self.u_true = np.append(self.u_true, u, axis=0)
             else:      
-                self.u_true.pop(0)
-                self.u_true.append(u)
+                self.u_true = self.u_true[1:]
+                self.u_true = np.append(self.u_true, u, axis=0)
         else:
-
+            self.u_true = u
         
     def check_command(self, u):
-        if np.shape(u)[0] != 1:
-            raise ValueError("dimension of u does not match N")
-        else:
-            if np.shape(u)[1] == self.N: 
-                return True
-        elif len(u) == self.N:
+        u_shape  = np.shape(u)
+        if type(u) is not np.ndarray:
+            raise ValueError("wrong command type, use np array")
+        elif len(u_shape) >=2:
+            raise ValueError("wrong shape of np array, make sure 1d with N elements")
+        elif u_shape[0] == self.N:
             return True
         else:
             raise ValueError("dimension of u does not match N")
 
     def predict_u(self):
-
-        if len(self.u_true) >= self.w_p:
+        num_samples_collected = np.shape(self.u_true)[0]
+        if num_samples_collected >= self.w_p:
             u_p = self.p(self.u_true)
-            if len(self.u_predicted) < self.w_e:
-                self.u_predicted.append(u_p)
+            self.check_command(u_p)
+            num_predictions = np.shape(self.u_predicted)[0]
+            u_p = np.array([u_p])  # for append
+            if num_predictions >= 1:
+                
+                if num_predictions < self.w_e:
+                    self.u_predicted = np.append(self.u_predicted, u_p)
+                else:
+                    self.u_predicted = self.u_predicted[1:]
+                    self.u_predicted = np.append(self.u_predicted, u_p)
             else:
-                self.u_predicted.pop(0)
-                self.u_predicted.append(u_p)
-        #     return True
-        # else:
-        #     return False
+                self.u_predicted = u_p
+
 
 class DiscreteEntropyOfBehavior(EntropyOfBehavior):
     def __init__(self, predictor, prediction_window, entropy_estimation_window, N):
@@ -69,8 +77,7 @@ class DiscreteEntropyOfBehavior(EntropyOfBehavior):
 
     def estimate_entropy(self):
         # don't necessarily need the full w_e to do this.. 
-        discrete.calc_entropy_using_confusion_matrix(self.u_true, self.u_for_prediction, labels = self.labels)
-        print("n")
+        discrete.calc_entropy_using_confusion_matrix(self.u_true, self.u_predicted, labels = self.labels)
 
 class ContinuousEntropyOfBehavior(EntropyOfBehavior):
     def __init__(self, predictor, prediction_window, entropy_estimation_window, N, bin_size):
@@ -87,7 +94,9 @@ class ContinuousEntropyOfBehavior(EntropyOfBehavior):
 
     def estimate_entropy(self):
         if self.u_true >= self.w_e:
-            return 0
+            u_errors =  self.u_true - self.u_predicted
+
+            
             # get errors..
 
         # else:

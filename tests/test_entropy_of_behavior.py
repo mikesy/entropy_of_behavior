@@ -15,69 +15,79 @@ class TestEntropyOfBehavior(object):
         
         #not using a list originally (only good for 1d)
         entropyObject = eob.EntropyOfBehavior(f, 3, 3, 1)
-        entropyObject.update_command_list(0)
-        entropyObject.update_command_list(1)
-        entropyObject.update_command_list(2)
-        assert entropyObject.u_true == [0, 1, 2]
+        entropyObject.update_command_list(np.array([0]))
+        assert entropyObject.u_true.tolist() == np.array(
+            [[0]]).tolist()
 
-        #using a list but still 1d (more general use case)
-        entropyObject = eob.EntropyOfBehavior(f, 3, 3, 1)
-        entropyObject.update_command_list([0])
-        entropyObject.update_command_list([1])
-        entropyObject.update_command_list([2])
-        assert entropyObject.u_true == [[0],[1],[2]]
+        entropyObject.update_command_list(np.array([1]))
+        assert entropyObject.u_true.tolist() == np.array(
+            [[0],[1]]).tolist()
+        entropyObject.update_command_list(np.array([2]))
+        assert entropyObject.u_true.tolist() == np.array([[0], [1], [2]]).tolist()
 
-        entropyObject.update_command_list([3])
-        assert entropyObject.u_true == [[1], [2], [3]]
+        entropyObject.update_command_list(np.array([3]))
+        assert entropyObject.u_true.tolist() == np.array(
+            [[1], [2], [3]]).tolist()
 
         entropyObject = eob.EntropyOfBehavior(f, 3, 3, 2)
-        entropyObject.update_command_list([0, 0])
-        entropyObject.update_command_list([1, 1])
-        entropyObject.update_command_list([2, 2])
-        assert entropyObject.u_true == [[0, 0], [1, 1], [2, 2]]
+        entropyObject.update_command_list(np.array([0, 0]))
+        entropyObject.update_command_list(np.array([1, 1]))
+        entropyObject.update_command_list(np.array([2, 2]))
+        assert entropyObject.u_true.tolist() == np.array([[0, 0], [1, 1], [2, 2]]).tolist()
 
-        entropyObject.update_command_list([3, 3])
-        assert entropyObject.u_true == [[1, 1], [2, 2], [3, 3]]
+        entropyObject.update_command_list(np.array([3, 3]))
+        assert entropyObject.u_true.tolist() == np.array([[1, 1], [2, 2], [3, 3]]).tolist()
 
     def test_check_command(self):
+
         def f(x):
             return x
         
         entropyObject = eob.EntropyOfBehavior(f, 3, 3, 1)
-        assert entropyObject.check_command([0])
-        assert entropyObject.check_command(0)
+        assert entropyObject.check_command(np.array([0]))
 
-        entropyObject = eob.EntropyOfBehavior(f, 3, 3, 3)
-        assert entropyObject.check_command([0,2,3])
-
-        with pytest.raises(ValueError): # "dimension of u does not match N"):
+        with pytest.raises(ValueError): 
             entropyObject.check_command([0])
 
+        with pytest.raises(ValueError): 
+            entropyObject.check_command(np.array([[0]]))
+
+        with pytest.raises(ValueError):
+            entropyObject.check_command(0)
+    
+
+        entropyObject = eob.EntropyOfBehavior(f, 3, 3, 3)
+        assert entropyObject.check_command(np.array([0, 2, 3]))
+        with pytest.raises(ValueError):
+            entropyObject.check_command(np.array([[0,2,3]]))
+
         with pytest.raises(ValueError): # "dimension of u does not match N"):
-            entropyObject.check_command([0,1,2,3])
+            entropyObject.check_command(np.array([0]))
+
+        with pytest.raises(ValueError): # "dimension of u does not match N"):
+            entropyObject.check_command(np.array([0,1,2,3]))
     
     def test_predict_u(self):
         def f1(x):
-            return x[-1][0] + 1  #just return the last one + 1
+            return np.array([x[-1,0] + 1])  #just return the last one + 1
 
+        # not enough samples to make prediction case
         entropyObject = eob.EntropyOfBehavior(f1, 3, 3, 1)
-
-        entropyObject.u_true = [0, 1]
+        entropyObject.u_true = np.array([[0], [1]])
         entropyObject.predict_u()
         assert entropyObject.u_predicted == []
 
+        entropyObject.u_true = np.array([[0], [1], [2]])
+        entropyObject.predict_u()
+        assert entropyObject.u_predicted.tolist() == np.array([[3]]).tolist()
+        
+        #function returns wrong array type
         def f2(x):
             return [x[-1][0] + 1]  # just return the last one + 1
-
         entropyObject = eob.EntropyOfBehavior(f2, 3, 3, 1)
-        #same test using more general use case
-        entropyObject.u_true = [[0],[1]]
-        entropyObject.predict_u()
-        assert entropyObject.u_predicted == []
-
-        entropyObject.u_true = [[0], [1], [2]]
-        entropyObject.predict_u()
-        assert entropyObject.u_predicted == [[3]]
+        entropyObject.u_true = np.array([[0], [1], [2]])
+        with pytest.raises(ValueError):
+            entropyObject.predict_u()
 
 class TestEntropyOfBehaviorContinuous(object):
         
@@ -94,9 +104,10 @@ class TestEntropyOfBehaviorContinuous(object):
             predictor, w_p, w_e, N, alpha)
 
         num_test_commands = 13
-        commands = np.array([float(i)/float(num_test_commands) for i in range(num_test_commands)])
+        commands = np.array([[float(i)/float(num_test_commands)] for i in range(num_test_commands)])
 
         entropyObject.u_true = commands[0:9]
+        entropyObject.u_predicted = commands[0:9]
 
         # for u in commands:
         #     entropy
