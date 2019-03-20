@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../')
 
-from entropy.continuous import entropy
+from entropy.continuous import continuous_entropy_functions as cef
 import numpy as np
 import pytest
 
@@ -17,7 +17,7 @@ class TestContinuousEntropy(object):
         actual_entropy += 0.5*np.log(0.5)*2  # 2 bins in center evenly distributed (0.5)
         bins = 10
         actual_entropy = -actual_entropy/np.log(bins)
-        assert entropy.calc_entropy(u_errors,alpha) == pytest.approx(actual_entropy)
+        assert cef.calc_entropy(u_errors,alpha) == pytest.approx(actual_entropy)
         # assert 0 == 0
 
     # taylor tests

@@ -3,6 +3,7 @@ This is the main access file for those needing access to the basics
 Contains access to discrete and continuous classes for use in realtime.
 """
 from entropy import discrete
+from entropy.continuous import continuous_entropy_functions as cef
 import numpy as np
 
 class EntropyOfBehavior:
@@ -12,7 +13,6 @@ class EntropyOfBehavior:
         self.w_e = entropy_estimation_window
         self.N = N
 
-        # self.u_for_prediction = []
         self.u_true = []
         self.u_predicted = []
         self.entropy = None
@@ -92,13 +92,14 @@ class ContinuousEntropyOfBehavior(EntropyOfBehavior):
         self.update_command_list(u_t)
         self.estimate_entropy()
 
+    def get_errors(self):
+        u_errors = self.u_true[len(self.u_predicted)-self.w_e:] - self.u_predicted
+        return u_errors
+
     def estimate_entropy(self):
-        if self.u_true >= self.w_e:
-            u_errors =  self.u_true - self.u_predicted
-
-            
-            # get errors..
-
-        # else:
-
-        # return 0
+        if len(self.u_predicted) >= self.w_e:
+            u_errors =  self.get_errors()
+            self.entropy = cef.calc_entropy(u_errors, self.bin_size)
+            return True
+        else:
+            return False

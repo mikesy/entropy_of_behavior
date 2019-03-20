@@ -40,24 +40,29 @@ def calc_alpha(u_errors, search_tol=1):
 
     return alpha
 
+def get_errors(u_true, u_pred):
+    """
+    must be np arrays
+    """
+    u_errors = u_true-u_pred
+    return u_errors
+
 def calc_entropy(u_errors, alpha):
+    """
+    only 1d right now, TODO make general
+    """
     # can accept a list of lists since data is segmented previously or a single list
-    bin_ranges = [-float("inf"), -5*alpha, -2.5*alpha, -alpha, -.5*alpha, .5*alpha, alpha, 2.5*alpha, 5*alpha, float("inf")]
     bin_ranges = [-float("inf"), -5*alpha, -3.5*alpha, -2*alpha, -alpha, 
                   0, alpha, 2*alpha, 3.5*alpha, 5*alpha, float("inf")]
-    segment_entropies = []
-    for segment_errors in u_errors:
-        entropy = 0
-        for bin_i in range(0,len(bin_ranges)-1):
-            vals_in_range = [n for n in segment_errors if n >= bin_ranges[bin_i]]
-            vals_in_range = [n for n in vals_in_range  if n < bin_ranges[bin_i+1]]
-            p_bin = float(len(vals_in_range))/float(len(segment_errors))  #probability of bin_i
-            if p_bin < 1e-5:
-                p_bin = 1e-5
-            entropy += p_bin*np.log(p_bin)/np.log(len(bin_ranges)-1)     #uses log rule: log_x (y) = log_a (y) / log_a(x)
-        segment_entropies += [-entropy]
-    return segment_entropies
-
+    entropy = 0
+    for bin_i in range(0,len(bin_ranges)-1):
+        vals_in_range = [n for n in u_errors if n >= bin_ranges[bin_i]]
+        vals_in_range = [n for n in vals_in_range  if n < bin_ranges[bin_i+1]]
+        p_bin = float(len(vals_in_range))/float(len(u_errors))  #probability of bin_i
+        if p_bin < 1e-5:
+            p_bin = 1e-5
+        entropy += p_bin*np.log(p_bin)/np.log(len(bin_ranges)-1)     #uses log rule: log_x (y) = log_a (y) / log_a(x)
+    return -entropy
 
 def calc_entropy_Nd(u_errors, alphas):
     # can accept a list of lists since data is segmented previously or a single list

@@ -4,7 +4,7 @@ sys.path.append('..')
 import pytest
 import numpy as np
 import entropy_of_behavior as eob  
-from entropy import taylor
+from predictors.continuous import taylor
 class TestEntropyOfBehavior(object):
     """tests for entropy of behavior functions"""
 
@@ -55,7 +55,6 @@ class TestEntropyOfBehavior(object):
         with pytest.raises(ValueError):
             entropyObject.check_command(0)
     
-
         entropyObject = eob.EntropyOfBehavior(f, 3, 3, 3)
         assert entropyObject.check_command(np.array([0, 2, 3]))
         with pytest.raises(ValueError):
@@ -90,7 +89,6 @@ class TestEntropyOfBehavior(object):
             entropyObject.predict_u()
 
 class TestEntropyOfBehaviorContinuous(object):
-        
     def test_estimate_entropy(self):
         #this is for taylor series so certain parameters are certain
         w_p =  3
@@ -105,12 +103,23 @@ class TestEntropyOfBehaviorContinuous(object):
 
         num_test_commands = 13
         commands = np.array([[float(i)/float(num_test_commands)] for i in range(num_test_commands)])
+        
+        entropyObject.u_true = commands[0:N-1]
+        entropyObject.u_predicted = commands[0:N-1]
+        assert not entropyObject.estimate_entropy()
+        assert not entropyObject.entropy
 
-        entropyObject.u_true = commands[0:9]
-        entropyObject.u_predicted = commands[0:9]
+        #shoud be perfect prediction
+        entropyObject.u_true = commands[0:w_e]
+        entropyObject.u_predicted = commands[0:w_e]
 
-        # for u in commands:
-        #     entropy
+        actual_entropy = 1e-5*np.log(1e-5)*9  # 8 empty bins
+        actual_entropy += 1.0*np.log(1.0)*1
+        bins = 10
+        actual_entropy = -actual_entropy/np.log(bins)
+        assert entropyObject.estimate_entropy() 
+        assert entropyObject.entropy == pytest.approx(actual_entropy)
+        
         
 
     def test_update(self):

@@ -2,7 +2,7 @@ import pytest
 import sys
 sys.path.append('../')
 
-from entropy import entropy, taylor, auto_regress, nn, auto_agree
+from entropy.continuous import continuous_entropy_functions as cef
 
 
 class TestEntropy(object):
@@ -15,13 +15,12 @@ class TestEntropy(object):
         u_errors = [0, 0, 0, 0, 0, 0, 0.5, -0.4, 0.25, .6]
         search_tol = 1
         correct_result = 0.54  
-        assert entropy.calc_alpha(u_errors,search_tol) == correct_result
+        assert cef.calc_alpha(u_errors,search_tol) == correct_result
         
 
     def test_calc_entropy(self):
         #TODO make some hand calculated tests and ensure entropy function works properly
         assert 0 == 0
-
 
     # taylor tests        
     def test_get_command_errors_1d(self):
